@@ -1,0 +1,7 @@
+mutation addMeasurement($weight: Float!, $date: Date) {
+  addMeasurement(measurement: { weight: $weight, date: $date }) {
+    id
+    weight
+    date
+  }
+}

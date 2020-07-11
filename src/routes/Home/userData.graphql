@@ -1,0 +1,19 @@
+query userData {
+  user {
+    id
+    username
+    currentMeasurement {
+      id
+      date
+      weight
+    }
+    preferences {
+      weightUnit
+    }
+    measurements {
+      id
+      date
+      weight
+    }
+  }
+}
