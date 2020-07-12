@@ -49,3 +49,7 @@ input[type="submit"] {
   border: 1px solid #277069;
   border-radius: 4px;
 }
+
+.error {
+  color: red;
+}

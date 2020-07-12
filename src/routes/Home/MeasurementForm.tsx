@@ -16,9 +16,10 @@ interface Props {
 }
 
 const MeasurementForm = ({ preferences: { weightUnit } }: Props) => {
-  const [weight, setWeight] = useState<number>(0);
+  const [weight, setWeight] = useState<string>("");
   const [specifyDate, setSpecifyDate] = useState<boolean>(false);
   const [date, setDate] = useState<Date>(new Date());
+  const [error, setError] = useState<string>("");
 
   const [, addMeasurement] = useMutation(addMeasurementMutation);
 
@@ -27,8 +28,27 @@ const MeasurementForm = ({ preferences: { weightUnit } }: Props) => {
       className="MeasurementForm"
       onSubmit={(e) => {
         e.preventDefault();
+        const weightAsNumber = Number(weight);
+        if (Number.isNaN(weightAsNumber)) {
+          setError("Not a valid number");
+          return;
+        }
+
+        if (weightAsNumber < 20 || weightAsNumber > 400) {
+          setError("Weight out of valid range");
+          return;
+        }
+
+        if (date > new Date()) {
+          setError("Date cannot be in the future");
+          return;
+        }
+
         addMeasurement({
-          weight: convertDisplayWeightToKg(weight, WeightUnits[weightUnit]),
+          weight: convertDisplayWeightToKg(
+            parseFloat(weight),
+            WeightUnits[weightUnit]
+          ),
           date: date.toISOString(),
         });
       }}
@@ -37,7 +57,7 @@ const MeasurementForm = ({ preferences: { weightUnit } }: Props) => {
         <input
           type="text"
           value={weight}
-          onChange={(e) => setWeight(parseFloat(e.target.value))}
+          onChange={(e) => setWeight(e.target.value)}
         />
       </div>
       <div>
@@ -58,6 +78,7 @@ const MeasurementForm = ({ preferences: { weightUnit } }: Props) => {
           />
         </div>
       )}
+      {error && <div className="error">{error}</div>}
       <div>
         <input type="submit" value="Submit" />
       </div>

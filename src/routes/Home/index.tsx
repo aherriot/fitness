@@ -19,7 +19,14 @@ const Home = () => {
   }
 
   if (error?.graphQLErrors.some((err) => err?.extensions?.code)) {
-    return <Redirect to="/login" />;
+    return (
+      <Redirect
+        to={{
+          pathname: "/login",
+          state: { referrer: window.location.pathname },
+        }}
+      />
+    );
   }
   // if (error) {
   //   return <div>error: {JSON.stringify(result.error)}</div>;
